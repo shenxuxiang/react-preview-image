@@ -1,4 +1,4 @@
-# Light Toast
+# react-preview-image
 
 A light-weight React preview-image component with extremely easy API. [Online Demo](https://shenxuxiang.github.io/react-preview-image/)
 
