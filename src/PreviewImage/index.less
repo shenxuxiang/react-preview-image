@@ -1,0 +1,46 @@
+.react-preview-image {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	width: 100%;
+	background: rgb(0,0,0);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+	z-index: 9999;
+  overflow: hidden;
+}
+.react-preview-image > .react-preview-image-wrapper {
+  position: relative;
+  height: 100%;
+  display: flex;
+  display: -webkit-flex;
+  -webkit-justify-content: flex-start; 
+  justify-content: flex-start; 
+  -webkit-align-items: center;
+  align-items: center;
+}
+.react-preview-image > .react-preview-image-wrapper > .wrapper-item {
+  height: 100%;
+  display: flex;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+.react-preview-image > .react-preview-image-wrapper > .wrapper-item > .wrapper-item-img {
+  max-width: 100%;
+  max-height: 100%;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+.react-preview-image > .react-preview-image-indicator {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 100%;
+  line-height: 20px;
+  font-size: 16px;
+  color: #ccc;
+  font-weight: 500;
+  text-align: center;
+}
