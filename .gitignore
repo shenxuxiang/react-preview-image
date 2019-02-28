@@ -25,3 +25,4 @@ vendor.dll.js
 yarn.lock
 
 /dist
+/demo

@@ -3,7 +3,7 @@ const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
 	mode: 'production',
-	entry: './src/PreviewImage', 
+	entry: './src/PreviewImage',
   output: {
     filename: 'boundle.js',
     path: path.resolve('./dist'),
@@ -37,7 +37,7 @@ module.exports = {
       {
         test: /\.css$/,
         include: path.resolve('./src'),
-        loader: [
+        loaders: [
           require.resolve('style-loader'),
           require.resolve('css-loader'),
         ],
@@ -45,7 +45,7 @@ module.exports = {
       {
         test: /\.less$/,
         include: path.resolve('./src'),
-        loader: [
+        loaders: [
           require.resolve('style-loader'),
           {
             loader: require.resolve('css-loader'),
