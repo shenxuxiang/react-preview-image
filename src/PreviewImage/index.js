@@ -31,8 +31,6 @@ export default class PreviewImage extends PureComponent {
     index: PropTypes.number,
     // 关闭展示
     onHide: PropTypes.func,
-    // 指示器的类名
-    indicatorClass: PropTypes.string,
     // 指示器的样式
     indicatorStyle: PropTypes.object,
   }
@@ -43,8 +41,9 @@ export default class PreviewImage extends PureComponent {
     visibleIndicator: true,
     index: 0,
     onHide: () => {},
-    indicatorClass: '',
-    indicatorStyle: null,
+    indicatorStyle: {
+      top: '50px',
+    },
   }
 
   constructor(props) {
@@ -54,6 +53,8 @@ export default class PreviewImage extends PureComponent {
       rerenders: 0,
       // 是否展示内容
       visible: props.visible,
+      // 组件是否即将隐藏 true表示即将隐藏 false是常态
+      willClose: false,
       // 当前展示那一张图片 从0 开始
       index: props.index,
     };
@@ -76,11 +77,15 @@ export default class PreviewImage extends PureComponent {
     return null;
   }
 
+  componentWillUnMount() {
+    this.clearTimer();
+  }
+
   // 清理定时器
   clearTimer = () => {
-    if (!this.timer) return;
-    clearTimeout(this.timer);
-    this.timer = null;
+    if (!this.interval) return;
+    clearTimeout(this.interval);
+    this.interval = null;
   }
 
   // 动画过度效果
@@ -178,19 +183,29 @@ export default class PreviewImage extends PureComponent {
     }
   }
 
+  handleClose = (event) => {
+    // 组织默认行为，双击图片会放大，不希望有这种情况出现，组织默认行为
+    event.preventDefault();
+    this.clearTimer();
+    const { onHide } = this.props;
+    this.setState({ willClose: true });
+    this.interval = setTimeout(() => {
+      this.setState({ willClose: false });
+      onHide();
+    }, 500);
+  }
+
   render() {
-    const { rerenders, visible, index } = this.state;
-    const { source, visibleIndicator, indicatorClass, indicatorStyle, onHide } = this.props;
+    const { rerenders, visible, index, willClose } = this.state;
+    const { source, visibleIndicator, indicatorStyle } = this.props;
     // 页面初始化的时候不跟随页面一同渲染，只在第一次展示的时候渲染，后面不会自动销毁组件
     if (rerenders === 0) return null;
     return (
       <Createportal>
         <div
-          className="react-preview-image"
-          onClick={() => onHide()}
+          className={`react-preview-image ${willClose ? 'hide' : ''}`}
+          onClick={this.handleClose}
           style={{ display: visible ? 'block' : 'none' }}
-          // 阻止默认行为传递，不让body跟随滚动
-          onTouchMove={event => event.preventDefault()}
         >
           <div
             className="react-preview-image-wrapper"
@@ -215,7 +230,7 @@ export default class PreviewImage extends PureComponent {
                   <img
                     src={item}
                     alt="tupian"
-                    className="wrapper-item-img"
+                    className={`wrapper-item-img ${willClose ? 'scale' : ''}`}
                   />
                 </div>
               )
@@ -224,7 +239,7 @@ export default class PreviewImage extends PureComponent {
           {
             visibleIndicator &&
               <div
-                className={`react-preview-image-indicator ${indicatorClass}`}
+                className="react-preview-image-indicator"
                 style={indicatorStyle}
               >
                 {`${index + 1} / ${source.length}`}

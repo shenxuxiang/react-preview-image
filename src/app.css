@@ -2,11 +2,15 @@ html {
 	padding: 0;
 	margin: 0;
 	font-size: 10vw;
+  -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
 }
 body {
-	padding: 0;
-	margin: 0;
+  padding: 0;
+  margin: 0;
 }
 .container {
-	font-size: .6rem;
+  width: 100%;
+  height: 1000px;
+  font-size: .6rem;
 }

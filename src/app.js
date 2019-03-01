@@ -8,7 +8,9 @@ import PreviewImage from './PreviewImage';
 import './app.css';
 
 const SOURCE = [img1, img2, img3, img4, img5];
-
+const indicatorStyle = {
+  bottom: '50px',
+};
 export default class App extends PureComponent {
   constructor() {
     super();
@@ -32,6 +34,7 @@ export default class App extends PureComponent {
           source={SOURCE}
           index={index}
           visible={visible}
+          indicatorStyle={indicatorStyle}
           onHide={this.handleTriggle}
         />
       </div>
