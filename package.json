@@ -1,6 +1,6 @@
 {
   "name": "react-preview-image",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "is a react component that shows the image, built for mobile web app",
   "main": "dist/boundle.js",
   "files": [
