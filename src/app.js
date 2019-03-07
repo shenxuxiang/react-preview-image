@@ -29,7 +29,8 @@ export default class App extends PureComponent {
     const { visible, index } = this.state;
     return (
       <div className="container">
-        <div className="button" onClick={this.handleTriggle}>展示</div>
+        <p>请切换到移动模式,并刷新后在查看</p>
+        <div className="button" onClick={this.handleTriggle}>点击查看</div>
         <PreviewImage
           source={SOURCE}
           index={index}

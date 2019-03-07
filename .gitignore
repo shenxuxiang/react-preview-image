@@ -25,4 +25,4 @@ vendor.dll.js
 yarn.lock
 package-lock.json
 /dist
-/demo
+/build

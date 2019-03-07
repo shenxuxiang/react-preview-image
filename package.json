@@ -11,7 +11,7 @@
     "build": "webpack --env.NODE_ENV=production",
     "start": "webpack-dev-server",
     "lint": "eslint --ext .js src/",
-    "deploy": "gh-pages -d demo"
+    "deploy": "gh-pages -d build"
   },
   "keywords": [
     "react",
@@ -25,7 +25,7 @@
   "license": "MIT",
   "dependencies": {
     "@babel/runtime-corejs2": "^7.3.4",
-    "prop-types": "^15.7.2",
+    "prop-types": "^15.7.2"
   },
   "peerDependencies": {
     "react": "^16.8.4",
