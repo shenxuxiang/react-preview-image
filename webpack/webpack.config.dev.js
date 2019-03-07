@@ -9,7 +9,7 @@ module.exports = {
     path: path.resolve('./dist'),
   },
   module: {
-    rules: [ 
+    rules: [
       {
         test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
         loader: require.resolve('url-loader'),
@@ -39,6 +39,23 @@ module.exports = {
         loaders: [
           require.resolve('style-loader'),
           require.resolve('css-loader'),
+          {
+            loader: require.resolve('postcss-loader'),
+            options: {
+              plugins: [
+                require('autoprefixer')({
+                  "browsers": [
+                    "defaults",
+                    "not ie < 11",
+                    "last 2 versions",
+                    "> 1%",
+                    "iOS 7",
+                    "last 3 iOS versions"
+                  ]
+                })
+              ]
+            }
+          },
         ],
       },
       {
@@ -51,6 +68,23 @@ module.exports = {
             options: {
               importLoaders: 1,
             },
+          },
+          {
+            loader: require.resolve('postcss-loader'),
+            options: {
+              plugins: [
+                require('autoprefixer')({
+                  "browsers": [
+                    "defaults",
+                    "not ie < 11",
+                    "last 2 versions",
+                    "> 1%",
+                    "iOS 7",
+                    "last 3 iOS versions"
+                  ]
+                })
+              ]
+            }
           },
           require.resolve('less-loader'),
         ],

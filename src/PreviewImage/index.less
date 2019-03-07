@@ -10,8 +10,8 @@
   overflow: hidden;
 }
 .react-preview-image.hide {
-  -webkit-animation: toTransparent .3s ease .2s 1;
-  animation: toTransparent .3s ease .2s 1;
+  -webkit-animation: toTransparent linear .3s 1;
+  animation: toTransparent linear .3s 1;
   -webkit-animation-fill-mode: forwards;
   animation-fill-mode: forwards;
 }
@@ -51,8 +51,8 @@
   transform: translateZ(0);
 }
 .react-preview-image > .react-preview-image-wrapper > .wrapper-item > .wrapper-item-img.scale {
-  -webkit-transition: transform .3s linear;
-  transition: transform .3s linear;
+  -webkit-transition: transform .3s cubic-bezier(0, 0, 0.01, 0.7);
+  transition: transform .3s cubic-bezier(0, 0, 0.01, 0.7);
   -webkit-transform: scale(1.3, 1.3);
   transform: scale(1.3, 1.3);
 }

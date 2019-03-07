@@ -23,6 +23,6 @@ yarn-error.log*
 vendor-manifest.json
 vendor.dll.js
 yarn.lock
-
+package-lock.json
 /dist
 /demo

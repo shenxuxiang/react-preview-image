@@ -2,6 +2,38 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Createportal from './CreatePortal';
 import './index.less';
+/* eslint-disable */
+(function() {
+  let lastTime = 0;
+  const vendors = ['webkit', 'moz'];
+  // 兼容，添加浏览器前缀
+  for (let i = 0; i < vendors.length && !window.requestAnimationFrame; i++) {
+    window.requestAnimationFrame = window[`${vendors[i]}RequestAnimationFrame`];
+    window.cancelAnimationFrame = window[`${vendors[i]}CancelAnimationFrame`] ||
+      // Webkit中此取消方法的名字变了
+      window[`${vendors[i]}CancelRequestAnimationFrame`];
+  }
+  // 当浏览器不支持原生时使用setTimeout作为代替
+  if (!window.requestAnimationFrame) {
+    window.requestAnimationFrame = function (callback) {
+      const currentTime = new Date().getTime();
+      // 第一次调用时是立即执行
+      // 如果callback执行的时间超过16ms，那么timeToCall=0
+      // 如果callback执行的时间不超过16ms，那么timeToCall=16-执行的时间
+      // 这样设计的原因是为了确保两次callback执行的时间间隔最少是16ms
+      const timeToCall = Math.max(0, 16 - (currentTime - lastTime));
+      const id = setTimeout(() => callback(), timeToCall);
+      lastTime = currentTime + timeToCall;
+      return id;
+    };
+  }
+  if (!window.cancelAnimationFrame) {
+    window.cancelAnimationFrame = function (id) {
+      clearTimeout(id);
+    };
+  }
+})();
+/* eslint-enable */
 
 // 屏幕宽度
 const screenWidth = window.innerWidth ||
@@ -77,48 +109,20 @@ export default class PreviewImage extends PureComponent {
     return null;
   }
 
-  componentWillUnMount() {
+  componentWillUnmount() {
     this.clearTimer();
   }
 
-  // 清理定时器
-  clearTimer = () => {
-    if (!this.interval) return;
-    clearTimeout(this.interval);
-    this.interval = null;
-  }
-
-  // 动画过度效果
-  animation = (idx) => {
-    const { index } = this.state;
-    // 动画执行的次数
-    let start = 0;
-    // 动画当前所处的位置
-    const currentPos = this.currentPos || index * screenWidth;
-    // 动画的偏移量 = 目标位置 - 当前位置
-    const offset = idx * screenWidth - currentPos;
-    // 动画会执行多少次，取整
-    const during = Math.abs(offset) / SPEED;
-    const run = () => {
-      start += 1;
-      let dist = Math.ceil(Quad(start, currentPos, offset, during));
-      // 这么做是为了避免最后滚动到的位置和预期的位置有偏差
-      if (start + 1 >= during) {
-        dist = idx * screenWidth;
-      }
-      this.wrapper.style.transform = `translate3d(${-dist}px, 0, 0)`;
-      this.wrapper.style.webkitTransform = `translate3d(${-dist}px, 0, 0)`;
-      if (start < during) {
-        requestAnimationFrame(run);
-      }
-    };
-    // 如果不构成翻页的情况，那么动画回弹到原型位置，不在往下进行
-    if (idx === index) {
-      run();
-      return;
-    }
-
-    this.setState({ index: idx }, () => run());
+  handleClose = (event) => {
+    // 组织默认行为，双击图片会放大，不希望有这种情况出现，组织默认行为
+    event.preventDefault();
+    this.clearTimer();
+    const { onHide } = this.props;
+    this.setState({ willClose: true });
+    this.interval = setTimeout(() => {
+      this.setState({ willClose: false });
+      onHide();
+    }, 300);
   }
 
   handleTouchStart = (event) => {
@@ -183,16 +187,44 @@ export default class PreviewImage extends PureComponent {
     }
   }
 
-  handleClose = (event) => {
-    // 组织默认行为，双击图片会放大，不希望有这种情况出现，组织默认行为
-    event.preventDefault();
-    this.clearTimer();
-    const { onHide } = this.props;
-    this.setState({ willClose: true });
-    this.interval = setTimeout(() => {
-      this.setState({ willClose: false });
-      onHide();
-    }, 500);
+  // 动画过度效果
+  animation = (idx) => {
+    const { index } = this.state;
+    // 动画执行的次数
+    let start = 0;
+    // 动画当前所处的位置
+    const currentPos = this.currentPos || index * screenWidth;
+    // 动画的偏移量 = 目标位置 - 当前位置
+    const offset = idx * screenWidth - currentPos;
+    // 动画会执行多少次，取整
+    const during = Math.abs(offset) / SPEED;
+    const run = () => {
+      start += 1;
+      let dist = Math.ceil(Quad(start, currentPos, offset, during));
+      // 这么做是为了避免最后滚动到的位置和预期的位置有偏差
+      if (start + 1 >= during) {
+        dist = idx * screenWidth;
+      }
+      this.wrapper.style.transform = `translate3d(${-dist}px, 0, 0)`;
+      this.wrapper.style.webkitTransform = `translate3d(${-dist}px, 0, 0)`;
+      if (start < during) {
+        requestAnimationFrame(run);
+      }
+    };
+    // 如果不构成翻页的情况，那么动画回弹到原型位置，不在往下进行
+    if (idx === index) {
+      run();
+      return;
+    }
+
+    this.setState({ index: idx }, () => run());
+  }
+
+  // 清理定时器
+  clearTimer = () => {
+    if (!this.interval) return;
+    clearTimeout(this.interval);
+    this.interval = null;
   }
 
   render() {
@@ -230,7 +262,7 @@ export default class PreviewImage extends PureComponent {
                   <img
                     src={item}
                     alt="tupian"
-                    className={`wrapper-item-img ${willClose ? 'scale' : ''}`}
+                    className={`wrapper-item-img ${willClose && idx === index ? 'scale' : ''}`}
                   />
                 </div>
               )

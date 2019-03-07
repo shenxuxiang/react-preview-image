@@ -1,6 +1,6 @@
 # react-preview-image
 
-A light-weight React preview-image component with extremely easy API（只适用于移动端项目）. [Online Demo](https://shenxuxiang.github.io/react-preview-image/)
+A light-weight React preview-image component with extremely easy API（只适用于移动端项目）. [Online Demo](https://shenxuxiang.github.io/react-preview-image/), welcome[code review](https://github.com/shenxuxiang/react-preview-image)
 
 ## Installation
 
